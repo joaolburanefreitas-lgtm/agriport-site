@@ -94,6 +94,38 @@ textarea{min-height:90px;resize:vertical}
 footer{background:#021f1e;color:#aab8b5;font-size:13px;padding-block:30px}
 footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
 footer img{height:30px}
+.mais{display:none}
+@media (max-width:600px){
+  header img{height:30px}
+  header .wrap{padding-block:10px;gap:10px}
+  nav{gap:10px}
+  .cta-nav{padding:7px 12px;font-size:13px!important}
+  .lang{padding:4px 8px}
+  .hero{padding-block:44px 40px}
+  .hero::after{display:none}
+  .kicker{font-size:11px;letter-spacing:.12em}
+  .hero p.lead{font-size:15.5px}
+  .btns{gap:10px}.btns .btn{flex:1;text-align:center;padding:13px 12px}
+  .fatos{grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+  .fato b{font-size:14px}.fato span{font-size:12px}
+  section{padding-block:46px}
+  .filtros{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;margin-left:-4px}
+  .filtros button{flex:0 0 auto}
+  .cat{grid-template-columns:1fr;gap:14px;margin-top:18px}
+  .prod .topo{padding:14px 16px}.prod .topo h3{font-size:18px}
+  .prod .corpo{padding:14px 16px}
+  .prod dl{display:none;grid-template-columns:96px 1fr;margin-top:6px}
+  .prod.aberto dl{display:grid}
+  .mais{display:inline-block;background:none;border:0;color:var(--cobre);font:700 13px Montserrat,sans-serif;padding:4px 0;cursor:pointer}
+  .prod .pe{padding:0 16px 16px}
+  .passos{grid-template-columns:1fr;gap:10px;margin-top:24px}
+  .passo{padding:16px}
+  .selos{grid-template-columns:1fr;gap:12px;margin-top:24px}
+  .selo{padding:16px}
+  form{padding:18px;gap:12px}
+  .ct{padding:18px}.ct dd{font-size:15.5px}
+  .wa{padding:10px 14px;font-size:13px}
+}
 .wa{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));background:#1f8f4e;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 18px;border-radius:30px;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:30}
 </style>
 </head>
@@ -105,7 +137,7 @@ footer img{height:30px}
       <a href="#produtos"><span data-l="en">Products</span><span data-l="pt">Produtos</span></a>
       <a href="#comprar"><span data-l="en">How to buy</span><span data-l="pt">Como comprar</span></a>
       <a href="#confianca"><span data-l="en">Why AGRIPORT</span><span data-l="pt">Por que a AGRIPORT</span></a>
-      <a href="#cotacao" class="cta-nav"><span data-l="en">Request a quote</span><span data-l="pt">Pedir cotação</span></a>
+      <a href="#cotacao" class="cta-nav"><span data-l="en">Get a quote</span><span data-l="pt">Cotação</span></a>
       <button class="lang" id="lang" type="button">PT</button>
     </nav>
   </div>
@@ -259,8 +291,9 @@ function render(){
   P.filter(function(p){return grp==='all'||p.g===grp}).forEach(function(p){
     var d=document.createElement('article');d.className='prod';
     var dl='';ROT[lang].forEach(function(r,i){dl+='<dt>'+r+'</dt><dd>'+p.s[lang][i]+'</dd>'});
-    d.innerHTML='<div class="topo"><small>'+p.k[lang]+'</small><h3>'+p[lang]+'</h3></div><div class="corpo"><div class="tipos">'+p.t.map(function(t){return '<span>'+t+'</span>'}).join('')+'</div><dl>'+dl+'</dl></div><div class="pe"><button class="btn btn-cobre" type="button">'+(lang==='en'?'Request a quote':'Pedir cotação')+'</button></div>';
-    d.querySelector('button').onclick=function(){document.getElementById('f-prod').value=p.id;location.hash='cotacao';document.getElementById('f-grade').focus()};
+    d.innerHTML='<div class="topo"><small>'+p.k[lang]+'</small><h3>'+p[lang]+'</h3></div><div class="corpo"><div class="tipos">'+p.t.map(function(t){return '<span>'+t+'</span>'}).join('')+'</div><button class="mais" type="button">'+(lang==='en'?'+ Specifications':'+ Especificações')+'</button><dl>'+dl+'</dl></div><div class="pe"><button class="btn btn-cobre" type="button">'+(lang==='en'?'Request a quote':'Pedir cotação')+'</button></div>';
+    d.querySelector('.mais').onclick=function(){var ab=d.classList.toggle('aberto');this.textContent=ab?(lang==='en'?'− Hide specifications':'− Ocultar especificações'):(lang==='en'?'+ Specifications':'+ Especificações')};
+    d.querySelector('.pe button').onclick=function(){document.getElementById('f-prod').value=p.id;location.hash='cotacao';document.getElementById('f-grade').focus()};
     c.appendChild(d)});
   var s=document.getElementById('f-prod'),v=s.value;s.innerHTML='';
   P.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.textContent=p[lang];s.appendChild(o)});
