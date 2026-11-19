@@ -30,7 +30,8 @@
   <div id="status"></div>
 </div>
 <script type="module">
-  import Vapi from "https://cdn.jsdelivr.net/npm/@vapi-ai/web@3.0.1/+esm";
+  import VapiMod from "https://cdn.jsdelivr.net/npm/@vapi-ai/web@3.0.1/+esm";
+  const Vapi = VapiMod.default || VapiMod; // o +esm do jsDelivr embrulha o default
   const CHAVE_PUBLICA = "a66ffc2f-fde5-434a-8ca5-6c8c09fb4d55";
   const ASSISTENTE = "f7c86009-f10c-406b-9f41-0cc7113430f9";
 
