@@ -26,6 +26,12 @@
   <div class="bola" id="bola"></div>
   <h1>Teste de ligação · Agriport</h1>
   <p>Toque no botão e permita o microfone. Você atende como a recepção ou o comercial de uma indústria de óleo de soja. A conversa é gravada.</p>
+  <select id="voz" style="width:100%;margin:0 0 14px;padding:12px;border-radius:12px;border:0;font-size:16px;background:#24312a;color:var(--txt)">
+    <option value="f7c86009-f10c-406b-9f41-0cc7113430f9">Voz 1 · Ana (feminina, calorosa)</option>
+    <option value="11617fbc-c92b-47ce-b822-16b3457fa4cc">Voz 2 · Bia (feminina, natural)</option>
+    <option value="6456399b-a3f0-43b0-9aef-d34829ea178f">Voz 3 · Larissa (feminina, leve)</option>
+    <option value="83d0ac72-aa85-49db-9fbb-56f847fa8262">Voz 4 · Heitor (masculina, interior)</option>
+  </select>
   <button id="btn">Atender ligação</button>
   <div id="status"></div>
 </div>
@@ -44,7 +50,7 @@
   btn.onclick = async () => {
     if (ativa) { vapi.stop(); return; }
     btn.disabled = true; st.textContent = "Conectando…";
-    try { await vapi.start(ASSISTENTE); }
+    try { await vapi.start(document.getElementById("voz").value || ASSISTENTE); }
     catch (e) { st.textContent = "Não conectou. Confira se o microfone foi permitido."; btn.disabled = false; }
   };
   vapi.on("call-start", () => {
