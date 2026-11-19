@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Agriport · teste de voz</title>
+<style>
+  :root { --bg:#0f1512; --card:#18211c; --txt:#eef3ef; --sub:#9fb0a5; --verde:#2f9e5b; --verm:#c0392b; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background:var(--bg); color:var(--txt); font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; padding:16px; }
+  .card { background:var(--card); border-radius:18px; padding:28px 22px; width:100%; max-width:380px; text-align:center; }
+  h1 { font-size:20px; margin:0 0 6px; }
+  p { color:var(--sub); font-size:15px; line-height:1.45; margin:0 0 22px; }
+  button { width:100%; border:0; border-radius:999px; padding:16px; font-size:17px; font-weight:600; color:#fff;
+           background:var(--verde); cursor:pointer; }
+  button.encerrar { background:var(--verm); }
+  button:disabled { opacity:.6; }
+  #status { margin-top:16px; font-size:14px; color:var(--sub); min-height:20px; }
+  .bola { width:72px; height:72px; border-radius:50%; margin:0 auto 18px; background:#24312a; transition:transform .1s; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bola" id="bola"></div>
+  <h1>Teste de ligação · Agriport</h1>
+  <p>Toque no botão e permita o microfone. Você atende como a recepção ou o comercial de uma indústria de óleo de soja. A conversa é gravada.</p>
+  <button id="btn">Atender ligação</button>
+  <div id="status"></div>
+</div>
+<script type="module">
+  import Vapi from "https://cdn.jsdelivr.net/npm/@vapi-ai/web@3.0.1/+esm";
+  const CHAVE_PUBLICA = "__VAPI_PUBLIC_KEY__";
+  const ASSISTENTE = "f7c86009-f10c-406b-9f41-0cc7113430f9";
+
+  const btn = document.getElementById("btn");
+  const st = document.getElementById("status");
+  const bola = document.getElementById("bola");
+  const vapi = new Vapi(CHAVE_PUBLICA);
+  let ativa = false;
+
+  btn.onclick = async () => {
+    if (ativa) { vapi.stop(); return; }
+    btn.disabled = true; st.textContent = "Conectando…";
+    try { await vapi.start(ASSISTENTE); }
+    catch (e) { st.textContent = "Não conectou. Confira se o microfone foi permitido."; btn.disabled = false; }
+  };
+  vapi.on("call-start", () => {
+    ativa = true; btn.disabled = false; btn.textContent = "Encerrar";
+    btn.classList.add("encerrar");
+    st.textContent = "Em ligação. Fale primeiro, como quem atende: \"Alô, boa tarde\".";
+  });
+  vapi.on("call-end", () => {
+    ativa = false; btn.disabled = false; btn.textContent = "Atender de novo";
+    btn.classList.remove("encerrar"); bola.style.transform = "scale(1)";
+    st.textContent = "Ligação encerrada. Obrigado!";
+  });
+  vapi.on("volume-level", (v) => { bola.style.transform = `scale(${1 + Math.min(v, 1) * 0.5})`; });
+  vapi.on("error", () => { st.textContent = "Erro na ligação. Tente de novo."; btn.disabled = false; });
+</script>
+</body>
+</html>
